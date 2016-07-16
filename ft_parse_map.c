@@ -6,11 +6,41 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:43:21 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/07/14 18:34:15 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/07/16 21:15:57 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+int			ft_atoi_custom(char *str, char **nstr)
+{
+	int		n;
+
+	while (*str == ' ')
+		++str;
+	n = 0;
+	if (*str == '-')
+	{
+		while (++str && *str && *str != ' ')
+		{
+			if (*str < '0' || *str > '9')
+				ft_print_error(3);
+			n += *str - '0';
+		}
+		while (*str == ' ')
+			*nstr = ++str;
+		return (n * -1);
+	}
+	while (*str && *str != ' ')
+	{
+		if (*str < '0' || *str > '9')
+			ft_print_error(3);
+		n += *str++ - '0';
+	}
+	while (*str == ' ')
+		*nstr = ++str;
+	return (n);
+}
 
 int			nb_space(char *str)
 {

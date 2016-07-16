@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:34:12 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/07/14 19:47:52 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/07/16 21:15:55 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ typedef struct	s_env
 	int			x2;
 	int			y1;
 	int			y2;
+	int			z;
+	int			padding;
 	void		*mlx;
 	void		*win;
 }				t_env;
 void			ft_print_error(int opcode);
 char			**ft_parse_map(t_env *ptr, char *file);
 char			chech_line(char **str);
+int				ft_atoi_custom(char *str, char **nstr);
 #endif
