@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:34:12 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/07/16 21:15:55 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/07/17 18:43:54 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <stdio.h>
 # include "get_next_line/get_next_line.h"
+# define DESC 15
 
 typedef struct	s_env
 {

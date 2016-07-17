@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:33:30 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/07/16 21:15:53 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/07/17 21:26:20 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,27 +75,40 @@ void	trace_table(t_env *ptr)
 	int		i;
 	int		x;
 	char	**tmp;
+	int		s;
 
 	ptr->mlx = mlx_init();
 	ptr->win = mlx_new_window(ptr->mlx, 800, 600, "FDF");
-	ptr->x1 = 1;
-	ptr->y1 = 1;
-	ptr->x2 = ptr->padding;
-	ptr->y2 = 1;
+	ptr->x1 = 400;
+	ptr->y1 = 0;
+	ptr->x2 = 400 + ptr->padding;
+	ptr->y2 = DESC;
 	i = 0;
 	x = 0;
+	s = DESC;
 	while (ptr->map[i])
 	{
 		if (ptr->map[i][0])
-			tmp = ft_strsplit(ptr->map[ptr->y2], ' ');
+			tmp = ft_strsplit(ptr->map[i], ' ');
 		else if (ptr->map[i + 1])
-			++i;
+		{
+			//ft_brase_zebi(ptr, ptr->x1, ptr->x2 - ptr->padding, ptr->y1, ptr->y2 + ptr->padding);
+			ptr->y1 = (s * 2);
+			ptr->y2 = (s * 2) + DESC;
+			ptr->x1 = 400 + (-35 * ++i);
+			ptr->x2 = 400 +  ptr->padding + (-35 * i);
+			s += DESC;
+		}
 		else
 			return ;
 		ptr->z = ft_atoi_custom(ptr->map[i], &ptr->map[i]);
-		ft_brase_zebi(ptr, ptr->x1, ptr->x2, ptr->y1, ptr->y2);
-		if (ptr->map[i + 1])
-			ft_brase_zebi(ptr, ptr->x1, ptr->x2, ptr->y1, ptr->y2 + ptr->padding);
+		ft_brase_zebi(ptr, ptr->x1, ptr->x2, ptr->y1 - ptr->z, ptr->y2 - ptr->z);
+		printf("i : %d  x1 : %d x2 : %d y1 : %d y2 : %d\n", i, ptr->x1, ptr->x2, ptr->y1, ptr->y2);
+		ptr->y1 = ptr->y2;
+		ptr->y2 += DESC;
+		//if (ptr->map[i + 1])
+			//ft_brase_zebi(ptr, ptr->x1, ptr->x2 - ptr->padding, ptr->y1, ptr->y2 + ptr->padding);
+		//printf("-> i : %d x1 : %d x2 : %d y1 : %d y2 : %d\n", i, ptr->x1, ptr->x2 - ptr->padding, ptr->y1, ptr->y2 + ptr->padding);
 		ptr->x1 += ptr->padding;
 		ptr->x2 += ptr->padding;
 	}
@@ -112,7 +125,7 @@ int		main(int ac, char **av)
 	}
 	if (!(ptr = malloc(sizeof(t_env))))
 		ft_print_error(0);
-	ptr->padding = 20;
+	ptr->padding = 32;
 	if (!(ptr->map = ft_parse_map(ptr, av[1])))
 		ft_print_error(0);
 	if (chech_line(ptr->map))
