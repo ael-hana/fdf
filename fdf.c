@@ -6,11 +6,12 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:33:30 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/08/15 11:24:06 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/15 22:11:12 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <stdlib.h>
 
 void	ft_print_error(int opcode)
 {
@@ -77,13 +78,13 @@ void		call_sys(t_env	*ptr, int h, int h2, int x1, int x2, int y1, int y2, int op
 	if (opt)
 		ft_brase_zebi(ptr, (x1 - y1) * (ptr->padding),
 			(x2 - y2) * (ptr->padding),
-			((y1 + x1) * (ptr->padding / 2)) - (h),
-			((y2 + x2) * (ptr->padding / 2)) - (h2));
+			((y1 + x1) * (ptr->padding)) - (h),
+			((y2 + x2) * (ptr->padding)) - (h2));
 	else
 		ft_brase_zebi(ptr, (x1 - y1) * ptr->padding,
-			(x1 - (y1 + ptr->padding * 2)) * ptr->padding,
-			(((y1 + x1)) * (ptr->padding / 2)) - (h),
-			((y2 + x2 + ptr->padding)) * (ptr->padding / 2) - (h2));
+			(x2 - (y2 + ptr->padding * 3)) * ptr->padding,
+			((y1 + x1) * (ptr->padding)) - h,
+			(((y2 + x2)) * (ptr->padding) - h2));
 }
 
 void	trace_table(t_env *ptr)
@@ -92,9 +93,9 @@ void	trace_table(t_env *ptr)
 	int		x;
 	char	**tmp;
 
-	ptr->x1 = 100;
+	ptr->x1 = 50;
 	ptr->y1 = 0;
-	ptr->x2 = 100 + ptr->padding;
+	ptr->x2 = 50 + ptr->padding;
 	ptr->y2 = 0;
 	i = 0;
 	while ((tmp = ptr->line[i]))
@@ -102,17 +103,18 @@ void	trace_table(t_env *ptr)
 		x = 0;
 		while (tmp[x + 1])
 		{
-			call_sys(ptr, ft_atoi(tmp[x]), ft_atoi(tmp[x + 1]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 1);
+			call_sys(ptr, atoi(ptr->line[i][x]), atoi(ptr->line[i][x + 1]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 1);
 			if (ptr->line[i + 1])
-				call_sys(ptr, ft_atoi(ptr->line[i][x]), ft_atoi(ptr->line[i + 1][x]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 0);
+				call_sys(ptr, atoi(ptr->line[i][x]), atoi(ptr->line[i + 1][x]), ptr->x1, ptr->x1, ptr->y1, ptr->y1 + ptr->padding, 1);
 				//ft_brase_zebi(ptr, ptr->x1, ptr->x1, ptr->y1, ptr->y2 + ptr->padding);
+			x++;
 			ptr->x1 = ptr->x2;
 			ptr->x2 += ptr->padding;
-			++x;
 		}
 		if (ptr->line[i + 1] && tmp[x])
-				call_sys(ptr, ft_atoi(tmp[x]), ft_atoi(ptr->line[i + 1][x]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 0);
-		else
+				call_sys(ptr, atoi(ptr->line[i][x]), atoi(ptr->line[i + 1][x]), ptr->x1, ptr->x1, ptr->y1, ptr->y1 + ptr->padding, 1);
+				//call_sys(ptr, ft_atoi(tmp[x]), ft_atoi(ptr->line[i + 1][x]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 1);
+		/*else
 		{
 			ptr->y1 += ptr->padding;
 			ptr->y2 += ptr->padding;
@@ -127,7 +129,7 @@ void	trace_table(t_env *ptr)
 				ptr->x2 += ptr->padding;
 				++x;
 			}
-		}
+		}*/
 			//ft_brase_zebi(ptr, ptr->x1, ptr->x1, ptr->y1, ptr->y2 + ptr->padding);
 		ptr->y1 += ptr->padding;
 		ptr->y2 += ptr->padding;
