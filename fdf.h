@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:34:12 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/07/17 18:43:54 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/15 02:59:47 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct	s_env
 	void		*mlx_ptr;
 	void		*mlx_win;
 	char		**map;
+	char		***line;
 	char		*tmp;
 	char		*map_s;
 	int			x1;
@@ -37,8 +38,10 @@ typedef struct	s_env
 	void		*mlx;
 	void		*win;
 }				t_env;
+
 void			ft_print_error(int opcode);
 char			**ft_parse_map(t_env *ptr, char *file);
-char			chech_line(char **str);
+char			chech_line(char ***str);
 int				ft_atoi_custom(char *str, char **nstr);
+void			ft_split_nbr(t_env	*ptr);
 #endif

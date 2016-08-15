@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:33:30 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/07/17 21:26:20 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/15 08:50:31 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	ft_print_error(int opcode)
 	else if (opcode == 2)
 		ft_putstr_fd("PARSSING ERRROR\n", 2);
 	else if (opcode == 3)
+		ft_putstr_fd("MAP ERROR\n", 2);
+	else if (opcode == 4)
 		ft_putstr_fd("MAP ERROR\n", 2);
 	exit(EXIT_FAILURE);
 }
@@ -70,47 +72,68 @@ void	ft_brase_zebi(t_env * ptr, int x1, int x2, int y1, int y2)
 	}
 }
 
+void		call_sys(t_env	*ptr, int h, int x1, int x2, int y1, int y2, int opt)
+{
+	if (opt)
+		ft_brase_zebi(ptr, (x1 - y1 - h) * (ptr->padding / 2),
+			(x2 - y2 - h) * (ptr->padding / 2),
+			((y1 + x1) * (ptr->padding / 2)) - h,
+			((y2 + x2) * (ptr->padding / 2)) - h);
+	else
+		ft_brase_zebi(ptr, (x1 - y1 - h) * (ptr->padding / 2),
+			(x1 - (y1 + ptr->padding * 2) - h) * (ptr->padding / 2),
+			(((y1 + x1)) * (ptr->padding / 2)) - h,
+			((y2 + x2 + ptr->padding)) * (ptr->padding / 2) - h);
+}
+
 void	trace_table(t_env *ptr)
 {
 	int		i;
 	int		x;
 	char	**tmp;
-	int		s;
 
-	ptr->mlx = mlx_init();
-	ptr->win = mlx_new_window(ptr->mlx, 800, 600, "FDF");
-	ptr->x1 = 400;
+	ptr->x1 = 100;
 	ptr->y1 = 0;
-	ptr->x2 = 400 + ptr->padding;
-	ptr->y2 = DESC;
+	ptr->x2 = 100 + ptr->padding;
+	ptr->y2 = 0;
 	i = 0;
-	x = 0;
-	s = DESC;
-	while (ptr->map[i])
+	while ((tmp = ptr->line[i]))
 	{
-		if (ptr->map[i][0])
-			tmp = ft_strsplit(ptr->map[i], ' ');
-		else if (ptr->map[i + 1])
+		x = 0;
+		while (tmp[x + 1])
 		{
-			//ft_brase_zebi(ptr, ptr->x1, ptr->x2 - ptr->padding, ptr->y1, ptr->y2 + ptr->padding);
-			ptr->y1 = (s * 2);
-			ptr->y2 = (s * 2) + DESC;
-			ptr->x1 = 400 + (-35 * ++i);
-			ptr->x2 = 400 +  ptr->padding + (-35 * i);
-			s += DESC;
+			call_sys(ptr, ft_atoi(tmp[x]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 1);
+			if (ptr->line[i + 1])
+				call_sys(ptr, ft_atoi(tmp[x]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 0);
+				//ft_brase_zebi(ptr, ptr->x1, ptr->x1, ptr->y1, ptr->y2 + ptr->padding);
+			ptr->x1 = ptr->x2;
+			ptr->x2 += ptr->padding;
+			++x;
 		}
+		if (ptr->line[i + 1] && tmp[x])
+				call_sys(ptr, ft_atoi(tmp[x]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 0);
 		else
-			return ;
-		ptr->z = ft_atoi_custom(ptr->map[i], &ptr->map[i]);
-		ft_brase_zebi(ptr, ptr->x1, ptr->x2, ptr->y1 - ptr->z, ptr->y2 - ptr->z);
-		printf("i : %d  x1 : %d x2 : %d y1 : %d y2 : %d\n", i, ptr->x1, ptr->x2, ptr->y1, ptr->y2);
-		ptr->y1 = ptr->y2;
-		ptr->y2 += DESC;
-		//if (ptr->map[i + 1])
-			//ft_brase_zebi(ptr, ptr->x1, ptr->x2 - ptr->padding, ptr->y1, ptr->y2 + ptr->padding);
-		//printf("-> i : %d x1 : %d x2 : %d y1 : %d y2 : %d\n", i, ptr->x1, ptr->x2 - ptr->padding, ptr->y1, ptr->y2 + ptr->padding);
-		ptr->x1 += ptr->padding;
-		ptr->x2 += ptr->padding;
+		{
+			ptr->y1 += ptr->padding;
+			ptr->y2 += ptr->padding;
+			ptr->x1 = 100;
+			ptr->x2 = 100 + ptr->padding;
+			x = 0;
+			tmp = ptr->line[i];
+			while (tmp[x])
+			{
+				call_sys(ptr, ft_atoi(tmp[x]), ptr->x1, ptr->x2, ptr->y1, ptr->y2, 1);
+					ptr->x1 = ptr->x2;
+					ptr->x2 += ptr->padding;
+				++x;
+			}
+		}
+			//ft_brase_zebi(ptr, ptr->x1, ptr->x1, ptr->y1, ptr->y2 + ptr->padding);
+		ptr->y1 += ptr->padding;
+		ptr->y2 += ptr->padding;
+		ptr->x1 = 100;
+		ptr->x2 = 100 + ptr->padding;
+		++i;
 	}
 }
 
@@ -125,11 +148,14 @@ int		main(int ac, char **av)
 	}
 	if (!(ptr = malloc(sizeof(t_env))))
 		ft_print_error(0);
-	ptr->padding = 32;
+	ptr->padding = 8;
 	if (!(ptr->map = ft_parse_map(ptr, av[1])))
 		ft_print_error(0);
-	if (chech_line(ptr->map))
+	ft_split_nbr(ptr);
+	if (chech_line(ptr->line))
 		ft_print_error(2);
+	ptr->mlx = mlx_init();
+	ptr->win = mlx_new_window(ptr->mlx, 2000, 1600, "FDF");
 	trace_table(ptr);
 	mlx_loop(ptr->mlx);
 	return (0);

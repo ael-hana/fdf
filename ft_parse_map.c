@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:43:21 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/07/17 21:28:55 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/15 05:20:54 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,36 +42,43 @@ int			ft_atoi_custom(char *str, char **nstr)
 	return (n);
 }
 
-int			nb_space(char *str)
+void		ft_split_nbr(t_env	*ptr)
 {
 	int		i;
 
 	i = 0;
-	while (*str)
+	while (ptr->map[i])
+		++i;
+	if (!(ptr->line = malloc(sizeof(char ***) * (i + 1))))
+		ft_print_error(4);
+	ptr->line[i] = NULL;
+	i = 0;
+	while (ptr->map[i])
 	{
-		if (*str != ' ')
-		{
-			while (*str == ' ')
-				++str;
-			++i;
-		}
-		++str;
+		ptr->line[i] = ft_strsplit(ptr->map[i], ' ');
+		++i;
 	}
-	return (i);
 }
 
-char		chech_line(char **str)
+char		chech_line(char ***str)
 {
-	int	i;
-	int	nb;
+	int		i;
+	int		y;
+	int		res;
 
+	if (str[0])
+	{
+		y = 0;
+		while(str[0][y])
+			res = ++y;
+	}
 	i = 1;
-	nb = nb_space(str[0]);
-	if (!nb)
-		return (0);
 	while (str[i])
 	{
-		if (nb != nb_space(str[i]))
+		y = 0;
+		while (str[i][y])
+			 ++y;
+		if (res != y)
 			return (-1);
 		++i;
 	}
