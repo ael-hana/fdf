@@ -3,10 +3,12 @@ NAME = fdf
 FLAG = -Wall -Werror -Wextra
 
 SRC = fdf.c\
+	tool.c\
 	ft_parse_map.c\
 	get_next_line/get_next_line.c
 
 OBJ= fdf.o\
+	 tool.o\
 	ft_parse_map.o\
 	get_next_line.o
 
