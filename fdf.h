@@ -6,7 +6,7 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:34:12 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/08/15 02:59:47 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/16 02:18:57 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include "get_next_line/get_next_line.h"
-# define DESC 15
+# define WINDOW_X 1000
+# define WINDOW_Y 500
 
 typedef struct	s_env
 {
@@ -34,6 +35,11 @@ typedef struct	s_env
 	int			y1;
 	int			y2;
 	int			z;
+	int			rot;
+	int			zoom;
+	int			color;
+	int			y_start;
+	int			x_start;
 	int			padding;
 	void		*mlx;
 	void		*win;
