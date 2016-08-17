@@ -6,13 +6,13 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/08/16 02:32:09 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/08/16 19:58:01 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/17 22:16:50 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	trace_table(t_env *ptr)
+void		trace_table(t_env *ptr)
 {
 	int		i;
 	int		x;
@@ -59,7 +59,7 @@ void		ft_clear_window(t_env *ptr)
 	}
 }
 
-void	reset_val(t_env *ptr)
+void		reset_val(t_env *ptr)
 {
 	ptr->padding = 4;
 	ptr->zoom = 3;
@@ -69,7 +69,7 @@ void	reset_val(t_env *ptr)
 	ptr->x_start = 75;
 }
 
-void	ft_next_exit_prog(int keycode, t_env *ptr)
+void		ft_next_exit_prog(int keycode, t_env *ptr)
 {
 	if (keycode == 126)
 		ptr->padding++;
@@ -92,7 +92,7 @@ void	ft_next_exit_prog(int keycode, t_env *ptr)
 	trace_table(ptr);
 }
 
-int		ft_exit_prog(int keycode, t_env *ptr)
+int			ft_exit_prog(int keycode, t_env *ptr)
 {
 	if (keycode == 53)
 		ft_print_error(5);

@@ -6,13 +6,13 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:33:30 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/08/16 19:58:00 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/17 22:16:49 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	ft_print_error(int opcode)
+void		ft_print_error(int opcode)
 {
 	if (!opcode)
 		ft_putstr_fd("Probleme malloc\n", 2);
@@ -31,7 +31,7 @@ void	ft_print_error(int opcode)
 	exit(EXIT_FAILURE);
 }
 
-void	ft_brase_zebi(t_env *ptr, t_norm *x)
+void		init_braze(t_norm *x)
 {
 	x->dx = (x->x2 - x->x1);
 	if (x->dx < 0)
@@ -50,11 +50,16 @@ void	ft_brase_zebi(t_env *ptr, t_norm *x)
 	else
 		x->sy = 1;
 	x->err = (x->dx > x->dy ? x->dx : -x->dy) / 2;
+}
+
+void		ft_brase_zebi(t_env *ptr, t_norm *x)
+{
+	init_braze(x);
 	while (42)
 	{
 		mlx_pixel_put(ptr->mlx, ptr->win, x->x1, x->y1, ptr->color);
 		if (x->x1 == x->x2 && x->y1 == x->y2)
-			return;
+			return ;
 		x->e2 = x->err;
 		if (x->e2 > -x->dx)
 		{
@@ -69,7 +74,7 @@ void	ft_brase_zebi(t_env *ptr, t_norm *x)
 	}
 }
 
-void		call_sys(t_env	*ptr, int i, int x, int opcode)
+void		call_sys(t_env *ptr, int i, int x, int opcode)
 {
 	t_norm c;
 
@@ -78,10 +83,10 @@ void		call_sys(t_env	*ptr, int i, int x, int opcode)
 		c.h = ft_atoi(ptr->line[i][x]);
 		c.h2 = ft_atoi(ptr->line[i][x + 1]);
 	}
-	else if(opcode == 1)
+	else if (opcode == 1)
 	{
 		c.h = ft_atoi(ptr->line[i][x]);
-		c.h2 = ft_atoi(ptr->line[i + 1][x ]);
+		c.h2 = ft_atoi(ptr->line[i + 1][x]);
 	}
 	else
 	{
@@ -97,31 +102,7 @@ void		call_sys(t_env	*ptr, int i, int x, int opcode)
 	ft_brase_zebi(ptr, &c);
 }
 
-void	ft_init_pos(int x1, int x2, t_env *ptr)
-{
-	ptr->x1 = x1;
-	ptr->x2 = x2;
-}
-
-void	display_menu(t_env *ptr)
-{
-	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
-			WINDOW_Y / 36, ptr->color, "ECHAP : exit");
-	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
-			WINDOW_Y / 18, ptr->color, "R : reset");
-	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
-			WINDOW_Y / 12, ptr->color, "<- -> w s : x - y");
-	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
-			WINDOW_Y / 8, ptr->color, "HAUT BAS : ZOOM");
-	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
-			WINDOW_Y / 6, ptr->color, "+ ou - : Z");
-	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
-			WINDOW_Y / 5, ptr->color, ", . : rotation");
-	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
-			WINDOW_Y / 4, ptr->color, "C : color");
-}
-
-int		main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	t_env	*ptr;
 

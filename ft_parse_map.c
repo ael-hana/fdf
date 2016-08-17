@@ -6,43 +6,13 @@
 /*   By: ael-hana <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/13 21:43:21 by ael-hana          #+#    #+#             */
-/*   Updated: 2016/08/16 02:18:58 by ael-hana         ###   ########.fr       */
+/*   Updated: 2016/08/17 22:10:04 by ael-hana         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int			ft_atoi_custom(char *str, char **nstr)
-{
-	int		n;
-
-	while (*str == ' ')
-		++str;
-	n = 0;
-	if (*str == '-')
-	{
-		while (++str && *str && *str != ' ')
-		{
-			if (*str < '0' || *str > '9')
-				ft_print_error(3);
-			n += *str - '0';
-		}
-		while (*str == ' ')
-			*nstr = ++str;
-		return (n * -1);
-	}
-	while (*str && *str != ' ')
-	{
-		if (*str < '0' || *str > '9')
-			ft_print_error(3);
-		n += *str++ - '0';
-	}
-	while (*str == ' ')
-		*nstr = ++str;
-	return (n);
-}
-
-void		ft_split_nbr(t_env	*ptr)
+void		ft_split_nbr(t_env *ptr)
 {
 	int		i;
 
@@ -69,7 +39,7 @@ char		chech_line(char ***str)
 	if (str[0])
 	{
 		y = 0;
-		while(str[0][y])
+		while (str[0][y])
 			res = ++y;
 	}
 	i = 1;
@@ -77,7 +47,7 @@ char		chech_line(char ***str)
 	{
 		y = 0;
 		while (str[i][y])
-			 ++y;
+			++y;
 		if (res != y)
 			return (-1);
 		++i;
@@ -105,7 +75,32 @@ char		**ft_parse_map(t_env *ptr, char *file)
 		free(ptr->map_s);
 		ptr->map_s = tmp;
 	}
-	ptr->map_s = ft_strjoin(tmp = ptr->map_s, "\n");
+	tmp = ptr->map_s;
+	ptr->map_s = ft_strjoin(tmp, "\n");
 	free(tmp);
 	return (ft_strsplit(ptr->map_s, '\n'));
+}
+
+void		ft_init_pos(int x1, int x2, t_env *ptr)
+{
+	ptr->x1 = x1;
+	ptr->x2 = x2;
+}
+
+void		display_menu(t_env *ptr)
+{
+	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
+			WINDOW_Y / 36, ptr->color, "ECHAP : exit");
+	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
+			WINDOW_Y / 18, ptr->color, "R : reset");
+	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
+			WINDOW_Y / 12, ptr->color, "<- -> w s : x - y");
+	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
+			WINDOW_Y / 8, ptr->color, "HAUT BAS : ZOOM");
+	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
+			WINDOW_Y / 6, ptr->color, "+ ou - : Z");
+	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
+			WINDOW_Y / 5, ptr->color, ", . : rotation");
+	mlx_string_put(ptr->mlx, ptr->win, WINDOW_X - 300,
+			WINDOW_Y / 4, ptr->color, "C : color");
 }
